@@ -10,24 +10,23 @@ router.get('/', function (req, res, next) {
 
 //render a form for registration
 router.get('/register', (req, res) => {
-  let uniqueEmail = req.flash('uniqueEmail')[0]
-  let minimumPassword = req.flash('minimumPassword')[0]
-  res.render('register', { uniqueEmail, minimumPassword })
+  let error = req.flash('error')[0]
+  res.render('register', { error })
 })
 
 //capture the data of registered users
 router.post('/register', (req, res, next) => {
-  let { email, password } = req.body
-  if (password.length <= 4) {
-    req.flash('minimumPassword', 'Maximum 4 character required in password')
-    return res.redirect('/users/register')
-  }
-  if (!email) {
-    req.flash('uniqueEmail', 'This email is already exist')
-    return res.redirect('/users/register')
-  }
   User.create(req.body, (err, user) => {
-    if (err) return next(err)
+    if (err) {
+      if (err.name === 'MongoServerError') {
+        req.flash('error', 'This email is already exist')
+        return res.redirect('/users/register')
+      }
+      if (err.name === 'ValidatorError') {
+        req.flash('error', err.message)
+        return res.redirect('/users/register')
+      }
+    }
     res.redirect('/users/login')
   })
 })
@@ -35,9 +34,7 @@ router.post('/register', (req, res, next) => {
 //render a login form
 router.get('/login', (req, res) => {
   let error = req.flash('error')[0]
-  let noEmail = req.flash('noEmail')[0]
-  let noPassword = req.flash('noPassword')[0]
-  res.render('login', { error, noEmail, noPassword, })
+  res.render('login', { error })
 })
 
 //capture the data of login user
@@ -53,14 +50,14 @@ router.post('/login', (req, res, next) => {
     if (err) return next(err)
     //no user
     if (!user) {
-      req.flash('noEmail', 'Email is invalid')
+      req.flash('error', 'Email is invalid')
       return res.redirect('/users/login')
     }
     //compare a password
     user.varifyPassword(password, (err, result) => {
       if (err) next(err)
       if (!result) {
-        req.flash('noPassword', 'Password is invalid')
+        req.flash('error', 'Password is invalid')
         return res.redirect('/users/login')
       }
       // persist logged in info
