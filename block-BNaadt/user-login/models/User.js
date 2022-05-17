@@ -4,8 +4,8 @@ let bcrypt = require('bcrypt')
 
 let userSchema = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true, minlength: 5 },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, minlength: 5, required: true },
     age: Number,
     phone: Number
 })
