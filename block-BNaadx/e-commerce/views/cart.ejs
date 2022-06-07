@@ -1,0 +1,21 @@
+<h2>Your Cart</h2>
+<%product.cart.forEach((product)=>{ %>
+    <div>
+        <img src="/images/<%=product.productImage%>" alt="<%= product.productImage%>">
+
+        <h2>
+            <a href="/users/product/<%= product._id%>"> <%=product.name%></a>
+        </h2>
+        <span>
+            ₹ <%=product.price%>
+        </span> <br>
+        <button>
+            <a href="/users/buy">Buy Now</a>
+        </button>
+   
+        <button>
+            <a href="/users/cart/<%=product._id%>">Remove</a>
+        </button>
+   
+    </div>
+    <%})%>
