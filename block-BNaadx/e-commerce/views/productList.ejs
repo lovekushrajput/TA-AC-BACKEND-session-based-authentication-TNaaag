@@ -1,0 +1,22 @@
+<% include partial/header %>
+<span>Login success</span> <br>
+<h1>Welcome to Admin Page</h1>
+<a href="/users/logout">logout</a> <br>
+<a href="/admin/product">Add Product</a>
+
+    <%products.forEach((product)=>{ %>
+        <div>
+        <img src="/images/<%=product.productImage%>" alt="<%= product.productImage%>">
+        <h2>
+            <%=product.name%>
+        </h2>
+        <p>
+            Quantity:  <%=product.quantity%>
+        </p>
+        <span>
+            ₹  <%=product.price%>
+        </span> 
+        <a href="/admin/product/<%=product._id%>/edit">Edit</a>
+        <a href="/admin/product/<%=product._id%>/delete">Delete</a>
+    </div>
+        <%})%>

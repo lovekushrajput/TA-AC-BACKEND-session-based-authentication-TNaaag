@@ -1,0 +1,17 @@
+<% include partial/header%>
+    <span>Welcome <%=user.name%></span>
+    <a href="/users/logout">logout</a>
+    <a href="/users/cart">Cart</a>
+
+    <%products.forEach((product)=>{ %>
+        <div>
+            <img src="/images/<%=product.productImage%>" alt="<%= product.productImage%>">
+
+            <h2>
+                <a href="/users/product/<%= product._id%>"> <%=product.name%></a>
+            </h2>
+            <span>
+                ₹ <%=product.price%>
+            </span>
+        </div>
+        <%})%>
